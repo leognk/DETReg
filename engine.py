@@ -25,6 +25,7 @@ from datasets.selfdet import selective_search
 from util.box_ops import box_xyxy_to_cxcywh, box_cxcywh_to_xyxy
 from util.plot_utils import plot_prediction
 from matplotlib import pyplot as plt
+import copy
 
 def train_one_epoch(model: torch.nn.Module, swav_model: torch.nn.Module, criterion: torch.nn.Module,
                     data_loader: Iterable, optimizer: torch.optim.Optimizer,
@@ -108,6 +109,8 @@ def evaluate(model, criterion, postprocessors, data_loader, base_ds, device, out
             output_dir=os.path.join(output_dir, "panoptic_eval"),
         )
 
+    coco_dt = None
+
     for samples, targets in metric_logger.log_every(data_loader, 10, header):
         samples = samples.to(device)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
@@ -157,6 +160,11 @@ def evaluate(model, criterion, postprocessors, data_loader, base_ds, device, out
         res = {target['image_id'].item(): output for target, output in zip(targets, results)}
         if coco_evaluator is not None:
             coco_evaluator.update(res)
+            dt = coco_evaluator.coco_eval["bbox"].cocoDt.dataset
+            if coco_dt is None:
+                coco_dt = copy.deepcopy(dt)
+            else:
+                coco_dt['annotations'].extend(copy.deepcopy(dt['annotations']))
 
         if panoptic_evaluator is not None:
             res_pano = postprocessors["panoptic"](outputs, target_sizes, orig_target_sizes)
@@ -193,7 +201,7 @@ def evaluate(model, criterion, postprocessors, data_loader, base_ds, device, out
         stats['PQ_all'] = panoptic_res["All"]
         stats['PQ_th'] = panoptic_res["Things"]
         stats['PQ_st'] = panoptic_res["Stuff"]
-    return stats, coco_evaluator
+    return stats, coco_evaluator, coco_dt
 
 @torch.no_grad()
 def viz(model, criterion, postprocessors, data_loader, base_ds, device, output_dir):

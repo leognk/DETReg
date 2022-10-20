@@ -1,6 +1,7 @@
 import shutil
 import os
 import json
+
 from classes import *
 
 dir_to_remove = "/home/user/.fiftyone"
@@ -93,3 +94,8 @@ if __name__ == '__main__':
     predictions_path = "exps/DETReg_fine_tune_base_classes_original/predictions.json"
     
     d = Dataset(data_path, labels_path, predictions_path)
+    res1 = d.compute_performance(d.dataset)
+    dataset2 = d.filter_confidence(d.dataset, 0.3)
+    res2 = d.compute_performance(dataset2)
+    print(f"mAP1: {res1.mAP()}")
+    print(f"mAP2: {res2.mAP()}")

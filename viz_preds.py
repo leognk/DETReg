@@ -1,9 +1,6 @@
-from collections import defaultdict
 import shutil
 import os
 import json
-import copy
-import numpy as np
 from classes import *
 
 dir_to_remove = "/home/user/.fiftyone"
@@ -15,24 +12,19 @@ import fiftyone.utils.coco as fouc
 
 class Dataset:
 
-    def __init__(self, data_root, preds_path):
-        self.data_root = data_root
+    def __init__(self, data_path, labels_path, preds_path):
+        self.data_path = data_path
+        self.labels_path = labels_path
         self.preds_path = preds_path
         self.load_dataset_with_preds()
 
     def load_dataset_with_preds(self):
 
-        # The directory containing the source images
-        data_path = os.path.join(self.data_root, "validation/data")
-
-        # The path to the COCO labels JSON file
-        labels_path = os.path.join(self.data_root, f"validation/labels.json")
-
         # Import the dataset
         self.dataset = fo.Dataset.from_dir(
             dataset_type=fo.types.COCODetectionDataset,
-            data_path=data_path,
-            labels_path=labels_path,
+            data_path=self.data_path,
+            labels_path=self.labels_path,
             label_field="ground_truth",
             # max_samples=100,
         )
@@ -56,9 +48,6 @@ class Dataset:
             ann for ann in preds["annotations"]\
                 if (ann['image_id'] in dataset_img_ids and ann['category_id'] not in undefined_cat_ids)
         ]
-
-        if self.topk_filtering is not None:
-            preds = self.filter_topk(preds, self.topk_filtering)
 
         n_preds = len(preds['annotations'])
         n_gt = self.dataset.count("ground_truth.detections")
@@ -99,6 +88,8 @@ class Dataset:
 if __name__ == '__main__':
 
     data_root = "/home/user/fiftyone/coco-2017"
+    data_path = os.path.join(data_root, "validation/data")
+    labels_path = os.path.join(data_root, "validation/subsets/original_base_classes_labels.json")
     predictions_path = "exps/DETReg_fine_tune_base_classes_original/predictions.json"
     
-    d = Dataset(data_root, predictions_path)
+    d = Dataset(data_path, labels_path, predictions_path)

@@ -170,7 +170,7 @@ def build(image_set, args):
     mode = 'instances'
     PATHS = {
         "train": (root / "train" / "data", root / "train" / "subsets" / "few_shots_labels_30shots" / "seed0.json"),
-        "val": (root / "validation" / "data", root / "validation" / "labels.json"),
+        "val": (root / "validation" / "data", root / "validation" / "subsets" / "original_base_classes_labels.json"),
     }
 
     img_folder, ann_file = PATHS[image_set]

@@ -1,6 +1,7 @@
 DATA_ROOT=/home/user/fiftyone
 EXP_ROOT=exps
-EXP_DIR=${EXP_ROOT}/DETReg_fs
+# EXP_DIR=${EXP_ROOT}/DETReg_fs
+EXP_DIR=${EXP_ROOT}/DETReg_fine_tune_base_classes_original
 python -u main.py \
     --data_root ${DATA_ROOT} \
     --output_dir ${EXP_DIR} \

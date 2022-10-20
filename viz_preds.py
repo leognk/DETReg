@@ -15,11 +15,9 @@ import fiftyone.utils.coco as fouc
 
 class Dataset:
 
-    def __init__(self, data_root, classes_split, n_shots, topk_filtering=None):
+    def __init__(self, data_root, preds_path):
         self.data_root = data_root
-        self.classes_split = classes_split
-        self.n_shots = n_shots
-        self.topk_filtering = topk_filtering
+        self.preds_path = preds_path
         self.load_dataset_with_preds()
 
     def load_dataset_with_preds(self):
@@ -45,11 +43,8 @@ class Dataset:
             sample["image_id"] = id
             sample.save()
 
-        # The path to the predictions file
-        preds_path = "exps/DETReg_fs/predictions.json"
-
         # Load the predictions file
-        with open(preds_path, 'r') as f:
+        with open(self.preds_path, 'r') as f:
             preds = json.load(f)
 
         # Remove undefined category ids in the predictions and only keep the images in the dataset
@@ -92,21 +87,6 @@ class Dataset:
             only_matches=False,
         )
 
-    def filter_topk(self, preds, k):
-
-        res = copy.deepcopy(preds)
-        res['annotations'] = []
-
-        img_to_anns = defaultdict(list)
-        for ann in preds['annotations']:
-            img_to_anns[ann['image_id']].append(ann)
-
-        for _, anns in img_to_anns.items():
-            topk_ids = np.argsort([ann['score'] for ann in anns])[-k:]
-            res['annotations'].extend([anns[i] for i in topk_ids])
-
-        return res
-
     def compute_performance(self, dataset, classes=None):
         return dataset.evaluate_detections(
             "predictions",
@@ -119,8 +99,6 @@ class Dataset:
 if __name__ == '__main__':
 
     data_root = "/home/user/fiftyone/coco-2017"
-    classes_split = "original"
-    n_shots = 30
-    topk_filtering = None
+    predictions_path = "exps/DETReg_fine_tune_base_classes_original/predictions.json"
     
-    d = Dataset(data_root, classes_split, n_shots, topk_filtering)
+    d = Dataset(data_root, predictions_path)

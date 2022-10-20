@@ -57,5 +57,5 @@ class EvaluationLoader:
 
 if __name__ == '__main__':
 
-    eval = EvaluationLoader("exps/DETReg_fs/eval4.pth")
+    eval = EvaluationLoader("exps/DETReg_fs/eval5.pth")
     print(eval)

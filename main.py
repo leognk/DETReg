@@ -63,8 +63,8 @@ def main(args):
             swav_model = build_swav_backbone_old(args, device)
     model, criterion, postprocessors = build_model(args)
     ###################################################################
-    for p in model.transformer.encoder.parameters():
-        p.requires_grad = False
+    # for p in model.transformer.encoder.parameters():
+    #     p.requires_grad = False
     ###################################################################
     model.to(device)
 

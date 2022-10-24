@@ -42,7 +42,7 @@ class EvaluationLoader:
                 s = s[:, :, :, area_range_idx, max_detections_idx]
                 avg_score = 100 * np.mean(s[s > -1])
                 self.scores[class_split][iou_threshold_str] = avg_score
-        
+    
     def __repr__(self):
         res = ""
         for class_split in self.scores:
@@ -57,6 +57,5 @@ class EvaluationLoader:
 
 if __name__ == '__main__':
 
-    # eval = EvaluationLoader("exps/DETReg_fs/eval5.pth")
-    eval = EvaluationLoader("exps/DETReg_fine_tune_base_classes_original/eval.pth")
+    eval = EvaluationLoader("exps/DETReg_fs/eval.pth")
     print(eval)

@@ -165,6 +165,9 @@ class DeformableDETR(nn.Module):
         hs, init_reference, inter_references, enc_outputs_class, enc_outputs_coord_unact = self.transformer(srcs, masks,
                                                                                                             pos,
                                                                                                             query_embeds)
+        ########################################################################################################################
+        hs.retain_grad()
+        ########################################################################################################################
         outputs_classes = []
         outputs_coords = []
         outputs_features = []
@@ -202,6 +205,9 @@ class DeformableDETR(nn.Module):
             out['enc_outputs'] = {'pred_logits': enc_outputs_class, 'pred_boxes': enc_outputs_coord}
             if self.object_embedding_loss:
                 out['pred_features'] = outputs_features
+        ########################################################################################################################
+        out['dec_outputs'] = hs
+        ########################################################################################################################
         return out
 
     @torch.jit.unused

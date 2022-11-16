@@ -320,6 +320,18 @@ def set_dataset_path(args):
     args.voc_path = os.path.join(args.data_root, 'pascal')
 
 
+def parse_args(args):
+    parser = argparse.ArgumentParser(
+        'Deformable DETR training and evaluation script', parents=[get_args_parser()])
+    args = parser.parse_args(args)
+    set_dataset_path(args)
+    set_model_defaults(args)
+    args.world_size = 1  # default world_size that might later change
+    if args.output_dir:
+        Path(args.output_dir).mkdir(parents=True, exist_ok=True)
+    return args
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Deformable DETR training and evaluation script', parents=[get_args_parser()])
     args = parser.parse_args()

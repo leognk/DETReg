@@ -24,8 +24,12 @@ class RepresenterPointsPrecomputer:
         novel_trainset = build_dataset(image_set="train", args=self.args, split="novel")
         base_train_loader = build_data_loader(self.args, base_trainset)
         novel_train_loader = build_data_loader(self.args, novel_trainset)
+        print("Start base trainset.")
         base_features, base_grads, base_ann_ids = self.compute_features_and_grads(base_train_loader)
+        print("Completed base trainset.")
+        print("Start novel trainset.")
         novel_features, novel_grads, novel_ann_ids = self.compute_features_and_grads(novel_train_loader)
+        print("Completed novel trainset.")
         self.train_features = np.concatenate([base_features, novel_features])
         self.grads = np.concatenate([base_grads, novel_grads])
         self.train_ann_ids = np.concatenate([base_ann_ids, novel_ann_ids])
@@ -33,7 +37,9 @@ class RepresenterPointsPrecomputer:
         # Compute the valset's features.
         valset = build_dataset(image_set="val", args=self.args)
         val_loader = build_data_loader(self.args, valset)
+        print("Start valset.")
         self.val_features, self.val_ann_ids = self.compute_features(val_loader)
+        print("Completed valset.")
 
         self.save()
     
@@ -55,7 +61,7 @@ class RepresenterPointsPrecomputer:
         grads = []
         ann_ids = []
 
-        for samples, targets in tqdm(train_loader):
+        for samples, targets in train_loader:
             samples, targets = samples.to("cuda:0"), [{k: v.to("cuda:0") for k, v in t.items()} for t in targets]
             outputs = self.model(samples)
             features.append(self.to_numpy(outputs["dec_outputs"][-1]))
@@ -73,7 +79,7 @@ class RepresenterPointsPrecomputer:
         features = []
         ann_ids = []
 
-        for samples, targets in tqdm(test_loader):
+        for samples, targets in test_loader:
             samples, targets = samples.to("cuda:0"), [{k: v.to("cuda:0") for k, v in t.items()} for t in targets]
             outputs = self.model(samples)
             features.append(self.to_numpy(outputs["dec_outputs"][-1]))

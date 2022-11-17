@@ -119,6 +119,9 @@ class ConvertCocoPolysToMask(object):
 
         target["orig_size"] = torch.as_tensor([int(h), int(w)])
         target["size"] = torch.as_tensor([int(h), int(w)])
+        ########################################################################
+        target["ann_ids"] = torch.as_tensor([obj["id"] for obj in anno])
+        ########################################################################
 
         return image, target
 
@@ -164,16 +167,19 @@ def make_coco_transforms(image_set):
     raise ValueError(f'unknown {image_set}')
 
 
-def build(image_set, args):
+def build(image_set, args, split=None):
     root = Path(args.coco_path)
     assert root.exists(), f'provided COCO path {root} does not exist'
     mode = 'instances'
     PATHS = {
-        "train": (root / "train" / "data", root / "train" / "subsets" / "few_shots_labels_200shots" / "seed0.json"),
+        "base_train": (root / "train" / "data", root / "train" / "subsets" / "original_base_classes_labels.json"),
+        "novel_train": (root / "train" / "data", root / "train" / "subsets" / "novel_few_shots_labels_200shots" / "seed0.json"),
         "val": (root / "validation" / "data", root / "validation" / "labels.json"),
     }
+    PATHS["train"] = PATHS["novel_train"]
 
-    img_folder, ann_file = PATHS[image_set]
+    key = image_set if split is None else split + '_' + image_set
+    img_folder, ann_file = PATHS[key]
 
     no_cats = False
     if 'coco' not in args.dataset:

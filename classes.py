@@ -170,3 +170,6 @@ NOVEL_CLASSES = [
     'train',
     'tv',
 ]
+
+BASE_CLASSES_IDS = {CLASS2ID[c] for c in BASE_CLASSES}
+NOVEL_CLASSES_IDS = {CLASS2ID[c] for c in NOVEL_CLASSES}

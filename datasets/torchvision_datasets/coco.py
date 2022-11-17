@@ -71,6 +71,10 @@ class CocoDetection(VisionDataset):
         img_id = self.ids[index]
         ann_ids = coco.getAnnIds(imgIds=img_id)
         target = coco.loadAnns(ann_ids)
+        ####################################################################################
+        # for ann in target:
+            # ann[]
+        ####################################################################################
 
         path = coco.loadImgs(img_id)[0]['file_name']
 

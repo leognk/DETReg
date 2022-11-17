@@ -151,4 +151,6 @@ def get_args_parser():
     parser.add_argument('--eos_coef', default=0.1, type=float,
                         help="Relative classification weight of the no-object class")
 
+    parser.add_argument('--repr_dir', default="")
+
     return parser

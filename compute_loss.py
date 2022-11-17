@@ -2,8 +2,10 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from util import box_ops
-from util.misc import (accuracy, get_world_size,
-                       is_dist_avail_and_initialized)
+from util.misc import accuracy, get_world_size, is_dist_avail_and_initialized
+from datasets import build_dataset
+from torch.utils.data import DataLoader
+import util.misc as utils
 
 from models.backbone import build_backbone
 from models.deformable_detr import DeformableDETR, PostProcess as DefPostProcess
@@ -217,3 +219,10 @@ def compute_loss(criterion, outputs, targets):
     weight_dict = criterion.weight_dict
     losses = sum(loss_dict[k] * weight_dict[k] for k in loss_dict.keys() if k in weight_dict)
     return losses
+
+
+def build_data_loader(args, dataset):
+    return DataLoader(
+        dataset, args.batch_size, drop_last=False,
+        collate_fn=utils.collate_fn, num_workers=args.num_workers, pin_memory=True
+    )

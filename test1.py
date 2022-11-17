@@ -3,7 +3,7 @@ from util.default_args import set_model_defaults
 from datasets import build_dataset
 from torch.utils.data import DataLoader
 import util.misc as utils
-from compute_individual_losses import compute_individual_losses, build_model_with_individual_criterion
+from compute_loss import *
 
 
 args = f'''
@@ -23,17 +23,22 @@ val_loader = DataLoader(dataset_val, args.batch_size,
                                 drop_last=False, collate_fn=utils.collate_fn, num_workers=args.num_workers,
                                 pin_memory=True)
 
-model, individual_criterion, postprocessors = build_model_with_individual_criterion(args)
+model, criterion, postprocessors = build_model(args)
 model.to("cuda:0")
+
+# Freeze all but the classifier.
+for p in model.parameters():
+    p.requires_grad = False
+for p in model.class_embed[-1].parameters():
+    p.requires_grad = True
 
 samples, targets = next(iter(val_loader))
 samples, targets = samples.to("cuda:0"), [{k: v.to("cuda:0") for k, v in t.items()} for t in targets]
 outputs = model(samples)
 print(outputs["dec_outputs"][-1].shape)
 
-losses = compute_individual_losses(individual_criterion, outputs, targets)
-print(losses.shape)
+losses = compute_loss(criterion, outputs, targets)
 
-# model.zero_grad()
-# losses.backward(inputs=outputs["dec_outputs"])
-# print(outputs["dec_outputs"].grad[-1].shape)
+model.zero_grad()
+losses.backward()
+print(outputs["all_pred_logits"].grad[-1].shape)

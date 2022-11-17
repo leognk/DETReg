@@ -165,9 +165,6 @@ class DeformableDETR(nn.Module):
         hs, init_reference, inter_references, enc_outputs_class, enc_outputs_coord_unact = self.transformer(srcs, masks,
                                                                                                             pos,
                                                                                                             query_embeds)
-        ########################################################################################################################
-        hs.retain_grad()
-        ########################################################################################################################
         outputs_classes = []
         outputs_coords = []
         outputs_features = []
@@ -194,6 +191,9 @@ class DeformableDETR(nn.Module):
         # if self.object_embedding_loss:
         #     outputs_features = torch.stack(outputs_features)
 
+        ########################################################################################################################
+        outputs_class.retain_grad()
+        ########################################################################################################################
         out = {'pred_logits': outputs_class[-1], 'pred_boxes': outputs_coord[-1]}
         if self.object_embedding_loss:
             out['pred_features'] = self.feature_embed(hs[-1])
@@ -207,6 +207,7 @@ class DeformableDETR(nn.Module):
                 out['pred_features'] = outputs_features
         ########################################################################################################################
         out['dec_outputs'] = hs
+        out['all_pred_logits'] = outputs_class
         ########################################################################################################################
         return out
 

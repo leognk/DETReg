@@ -223,3 +223,13 @@ def compute_individual_losses(criterion, outputs, targets):
     weight_dict = criterion.weight_dict
     losses = torch.sum(torch.stack([loss_dict[k] * weight_dict[k] for k in loss_dict.keys() if k in weight_dict]), 0)
     return losses
+
+def disable_non_projectors_grads(model):
+    for p in model.parameters():
+        p.requires_grad = False
+    for p in model.class_embed[-1].parameters():
+        p.requires_grad = True
+    for p in model.bbox_embed[-1].parameters():
+        p.requires_grad = True
+    for p in model.transformer.decoder.parameters():
+        p.requires_grad = True

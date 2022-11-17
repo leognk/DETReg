@@ -2,6 +2,7 @@
 #SBATCH --job-name=Repr
 ###########RESOURCES###########
 #SBATCH --nodelist="yagi32"
+#SBATCH --partition=48-3
 #SBATCH --gres=gpu:2
 #SBATCH --mem=100G
 #SBATCH --tasks-per-node=1

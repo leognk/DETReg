@@ -61,7 +61,7 @@ class RepresenterPointsPrecomputer:
         grads = []
         ann_ids = []
 
-        for samples, targets in train_loader:
+        for samples, targets in tqdm(train_loader):
             samples, targets = samples.to("cuda:0"), [{k: v.to("cuda:0") for k, v in t.items()} for t in targets]
             outputs = self.model(samples)
             features.append(self.to_numpy(outputs["dec_outputs"][-1]))
@@ -79,7 +79,7 @@ class RepresenterPointsPrecomputer:
         features = []
         ann_ids = []
 
-        for samples, targets in test_loader:
+        for samples, targets in tqdm(test_loader):
             samples, targets = samples.to("cuda:0"), [{k: v.to("cuda:0") for k, v in t.items()} for t in targets]
             outputs = self.model(samples)
             features.append(self.to_numpy(outputs["dec_outputs"][-1]))

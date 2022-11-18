@@ -18,7 +18,7 @@ conda activate base
 DATA_ROOT=/po2/goncalves/data
 EXP_ROOT=/po2/goncalves/exps
 REPR_DIR=/po2/goncalves/representer_points
-srun python -u main.py \
+srun python -u precompute_repr_points.py \
     --data_root ${DATA_ROOT} \
     --dataset coco \
     --pretrain ${EXP_ROOT}/DETReg_fs/checkpoint.pth \

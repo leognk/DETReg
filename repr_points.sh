@@ -22,6 +22,6 @@ srun python -u main.py \
     --data_root ${DATA_ROOT} \
     --dataset coco \
     --pretrain ${EXP_ROOT}/DETReg_fs/checkpoint.pth \
-    --num_workers 4
-    --batch_size 4
+    --num_workers 4 \
+    --batch_size 4 \
     --repr_dir ${REPR_DIR}

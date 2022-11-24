@@ -95,22 +95,22 @@ if __name__ == '__main__':
     from util.default_args import set_model_defaults, get_args_parser
 
     ###############################################################################################################################################################
-    args = f'''
-    --data_root /home/user/fiftyone
-    --dataset coco
-    --pretrain exps/DETReg_fs/checkpoint.pth
-    --num_workers 4
-    --batch_size 4
-    --repr_dir representer_points
-    '''
-    args = args.split()
-    args = parse_args(args)
+    # args = f'''
+    # --data_root /home/user/fiftyone
+    # --dataset coco
+    # --pretrain exps/DETReg_fs/checkpoint.pth
+    # --num_workers 4
+    # --batch_size 4
+    # --repr_dir representer_points
+    # '''
+    # args = args.split()
+    # args = parse_args(args)
     ###############################################################################################################################################################
 
     ###############################################################################################################################################################
-    # parser = argparse.ArgumentParser('Deformable DETR training and evaluation script', parents=[get_args_parser()])
-    # args = parser.parse_args()
-    # set_dataset_path(args)
+    parser = argparse.ArgumentParser('Deformable DETR training and evaluation script', parents=[get_args_parser()])
+    args = parser.parse_args()
+    set_dataset_path(args)
     ###############################################################################################################################################################
 
     set_model_defaults(args)

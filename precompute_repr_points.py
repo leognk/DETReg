@@ -29,6 +29,12 @@ class RepresenterPointsPrecomputer:
         print("Completed base trainset.")
         print("Start novel trainset.")
         novel_features, novel_grads, novel_img_ids = self.compute_features_and_grads(novel_train_loader)
+        # Remove duplicate images
+        duplicate_ids = np.array(list(set(base_img_ids) & set(novel_img_ids)))
+        novel_img_indices = np.isin(novel_img_ids, duplicate_ids, invert=True)
+        novel_features = novel_features[novel_img_indices]
+        novel_grads = novel_grads[novel_img_indices]
+        novel_img_ids = novel_img_ids[novel_img_indices]
         print("Completed novel trainset.")
         self.train_features = np.concatenate([base_features, novel_features])
         self.grads = np.concatenate([base_grads, novel_grads])

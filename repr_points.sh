@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=Repr
 ###########RESOURCES###########
-#SBATCH --nodelist="yagi32"
-#SBATCH --partition=48-3
-#SBATCH --gres=gpu:3
+#SBATCH --nodelist="yagi33"
+#SBATCH --partition=48-2
+#SBATCH --gres=gpu:2
 #SBATCH --mem=100G
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=8

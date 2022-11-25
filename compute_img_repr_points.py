@@ -3,13 +3,15 @@ import os
 from classes import *
 from tqdm import tqdm
 import torch
+import argparse
 
-dir = "representer_points/arrays"
+parser = argparse.ArgumentParser()
+parser.add_argument("--dir", type=str)
+args = parser.parse_args()
 
-train_img_ids = np.load(os.path.join(dir, "train_img_ids.npy"))
-grads = np.load(os.path.join(dir, "grads.npy"))
-f_train = np.load(os.path.join(dir, "train_features.npy"))
-f_test = np.load(os.path.join(dir, "val_features.npy"))
+grads = np.load(os.path.join(args.dir, "grads.npy"))
+f_train = np.load(os.path.join(args.dir, "train_features.npy"))
+f_test = np.load(os.path.join(args.dir, "val_features.npy"))
 
 n_train = len(f_train)
 n_test = len(f_test)

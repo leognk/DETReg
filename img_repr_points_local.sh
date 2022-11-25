@@ -1,0 +1,1 @@
+python -u compute_img_repr_points.py --dir representer_points/tiny_arrays

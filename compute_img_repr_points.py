@@ -9,9 +9,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--dir", type=str)
 args = parser.parse_args()
 
-grads = np.load(os.path.join(args.dir, "grads.npy"))
-f_train = np.load(os.path.join(args.dir, "train_features.npy"))
-f_test = np.load(os.path.join(args.dir, "val_features.npy"))
+grads = np.load(os.path.join(args.dir, "grads.npy")).astype(np.float32)
+f_train = np.load(os.path.join(args.dir, "train_features.npy")).astype(np.float32)
+f_test = np.load(os.path.join(args.dir, "val_features.npy")).astype(np.float32)
 
 n_train = len(f_train)
 n_test = len(f_test)
@@ -26,10 +26,10 @@ del grads
 f_test_sum = f_test.sum(1).T
 f_test_sum = torch.from_numpy(f_test_sum).to(device)
 
-k = torch.zeros((n_train, n_test, k_novel), dtype=torch.float16, device=device)
+k = torch.zeros((n_train, n_test, k_novel), dtype=torch.float32, device=device)
 for n in tqdm(range(k_novel)):
     weighted_f_train_sum = (alpha[:, :, n, np.newaxis] * f_train).sum(1)
     weighted_f_train_sum = torch.from_numpy(weighted_f_train_sum).to(device)
     k[:, :, n] = torch.matmul(weighted_f_train_sum, f_test_sum)
 
-np.save(os.path.join(dir, "img_repr_points.npy"), k.cpu().numpy())
+np.save(os.path.join(args.dir, "img_repr_points.npy"), k.cpu().numpy().astype(np.float16))

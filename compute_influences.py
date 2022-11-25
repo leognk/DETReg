@@ -4,6 +4,8 @@ from classes import *
 
 dir = "representer_points/tiny_arrays"
 
+train_img_ids = np.load(os.path.join(dir, "train_img_ids.npy"))
+val_img_ids = np.load(os.path.join(dir, "val_img_ids.npy"))
 k = np.load(os.path.join(dir, "img_repr_points.npy"))
 
 n_train = k.shape[1]

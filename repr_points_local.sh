@@ -1,6 +1,6 @@
 DATA_ROOT=/home/user/fiftyone
 EXP_ROOT=exps
-REPR_DIR=c
+REPR_DIR=representer_points
 python -u precompute_repr_points.py \
     --data_root ${DATA_ROOT} \
     --dataset coco \

@@ -3,7 +3,7 @@ import os
 from classes import *
 import json
 
-dir = "representer_points/tiny_arrays"
+dir = "representer_points/arrays"
 data_root = "/home/user/fiftyone/coco-2017"
 
 train_img_ids = np.load(os.path.join(dir, "train_img_ids.npy"))
@@ -72,3 +72,20 @@ infl = (np.expand_dims(r_test, 0) * k2).sum(-1)
 
 np.save(os.path.join(dir, "influences.npy"), infl)
 print("infl has been saved")
+
+
+
+####################################################################################################################################
+# from pandas import DataFrame
+# import seaborn as sns
+# import matplotlib.pyplot as plt
+
+# r = np.expand_dims(r_train.sum(-1), 1) * np.expand_dims(r_test.sum(-1), 0)
+# r = r / np.max(np.abs(r), axis=0, keepdims=True)
+# # r = -r / np.max(np.abs(r), keepdims=True)
+# r = np.round(100 * r).astype(int)
+
+# r = DataFrame(r[:,0], index=SORTED_BASE_CLASSES, columns=["Proportion of labels"])
+# fig, ax = plt.subplots(figsize=(2, 15))
+# sns.heatmap(r, linewidths=0, annot=True, fmt=".0f", ax=ax, cmap=sns.cm.rocket_r)
+####################################################################################################################################

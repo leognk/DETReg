@@ -3,7 +3,7 @@ import os
 from classes import *
 import json
 
-dir = "representer_points/arrays"
+dir = "representer_points/tiny_arrays"
 data_root = "/home/user/fiftyone/coco-2017"
 
 train_img_ids = np.load(os.path.join(dir, "train_img_ids.npy"))
@@ -57,8 +57,8 @@ for ann in val_labels["annotations"]:
 n_train_anns[n_train_anns == 0] = 1
 n_val_anns[n_val_anns == 0] = 1
 
-r_train = (n_train_anns_by_cat[SORTED_BASE_CLASSES_IDS] / np.expand_dims(n_train_anns, 0))
-r_test = (n_val_anns_by_cat[SORTED_NOVEL_CLASSES_IDS] / np.expand_dims(n_val_anns, 0))
+r_train = (n_train_anns_by_cat[SORTED_BASE_CLASSES_IDS] / np.expand_dims(n_train_anns, 0)).astype(np.float32)
+r_test = (n_val_anns_by_cat[SORTED_NOVEL_CLASSES_IDS] / np.expand_dims(n_val_anns, 0)).astype(np.float32)
 
 print("r has been calculated")
 
@@ -66,7 +66,7 @@ import time
 start_time = time.time()
 k2 = np.swapaxes(np.tensordot(r_train, k.astype(np.float32), axes=[1, 0]), 1, 2)
 etime = time.time() - start_time
-print(f"k2 has been calculated (took {etime / 60} min)")
+print(f"k2 has been calculated (took {etime} s)")
 
 infl = (np.expand_dims(r_test, 0) * k2).sum(-1)
 
